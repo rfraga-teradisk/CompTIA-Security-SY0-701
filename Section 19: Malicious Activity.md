@@ -13,8 +13,9 @@
 4. [Suspicious Authentication Activity](#suspicious-authentication-activity)
 5. [Endpoint Indicators](#endpoint-indicators)
 6. [Network Indicators](#network-indicators)
-7. [Triage Questions](#triage-questions)
-8. [Key Takeaways](#key-takeaways)
+7. [Interpreting Activity Indicators](#interpreting-activity-indicators)
+8. [Triage Questions](#triage-questions)
+9. [Key Takeaways](#key-takeaways)
 
 ## Malicious Activity
 
@@ -78,6 +79,20 @@ Examples:
 - Large outbound data transfer
 - Beaconing pattern
 - Traffic to rare external destination
+
+## Interpreting Activity Indicators
+
+| Indicator | Possible Concern | Context to Check |
+| --- | --- | --- |
+| **Account Lockout** | Password guessing or credential abuse | Mistyped passwords, stale service credentials, and failure patterns across accounts. |
+| **Concurrent Sessions** | Stolen credentials or session tokens | Legitimate use of multiple devices or applications. |
+| **Impossible Travel** | Geographically distant sign-ins too close together for realistic travel | VPNs, proxies, mobile networks, and inaccurate IP geolocation. |
+| **Blocked Content** | Attempted malware delivery or contact with malicious infrastructure | Whether the control blocked the attempt before execution; a block alone does not prove infection. |
+| **Resource Consumption** | Cryptojacking, denial of service, or unauthorized cloud workloads | Backups, updates, demand spikes, and approved deployments. |
+| **Out-of-Cycle Activity** | Activity outside expected hours or schedules | Time zones, maintenance, automation, and changed work patterns. |
+| **Missing or Altered Logs** | Disabled logging, deletion, or timestamp manipulation to hide activity | Retention settings, storage failures, collection outages, and clock synchronization. |
+
+IoCs can include files, registry entries, memory artifacts, and network or identity events. Correlate multiple sources and preserve relevant evidence. Being logged in on-site and through a VPN is not automatically impossible travel. See [Microsoft's anomaly-investigation guidance](https://learn.microsoft.com/en-us/defender-cloud-apps/investigate-anomaly-alerts).
 
 ## Triage Questions
 

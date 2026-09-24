@@ -902,11 +902,11 @@ secure space without their knowledge or consent
         - Step 1: Scanning
             - Scanning or reading the targeted individual’s access badge
         - Step 2: Data Extraction
-            - Attackers extract the relevant authentication credentials from the card, such as a unique identifier or a set of encrypted data
+            - Attackers may extract a readable identifier or other data; copying encrypted data alone does not necessarily reproduce cryptographic authentication
         - Step 3: Writing to a new card or device
             - Attacker will then transfers the extracted data onto a blank RFID or NFC card or another compatible device
         - Step 4: Using the cloned access badge
-            - Attackers gain unauthorized access to buildings, computer systems, or even make payments using a cloned NFC-enabled credit card
+            - A copied static badge identifier may grant access if the reader trusts that identifier alone. Copying readable payment-card data does not clone an EMV chip transaction; see [EMVCo's chip-security explanation](https://www.emvco.com/knowledge-hub/how-do-emv-chip-specifications-tackle-card-fraud/).
 - Access badge cloning is common because of its
     - Ease of execution
         - Ability to be stealthy when conducting the attack
@@ -1962,9 +1962,9 @@ Objectives:
                 - Multi-factor authentication
                 - Least privilege
 - *Birthday Attack*
-    - Occurs when two different messages result in the same hash digest (collision)
+    - Uses the birthday effect to find two different inputs with the same hash digest more efficiently than exhaustive search over every possible digest
         - Named after the Birthday Paradox, where shared birthdays become likely in a group
-            - Collisions in hashes can be exploited by attackers to bypass authentication systems
+            - A collision can undermine a system that relies on collision resistance, such as some digital-signature or integrity-check workflows; it does not automatically reveal a password or bypass authentication
             - Use longer hash output (e.g., SHA-256) to reduce collisions and mitigate the attack
     - Increasing Hash Security
         - *Key Stretching*
@@ -1974,7 +1974,7 @@ Objectives:
         - *Salting*
             - Adds random data (salt) to passwords before hashing
             - Ensures distinct hash outputs for the same password due to different salts
-            - Thwarts dictionary attacks, brute-force attacks, and rainbow tables
+            - Prevents reuse of precomputed rainbow tables across accounts, but attackers can still guess candidates against each salted hash; see [OWASP password-storage guidance](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)
         - *Nonces (Number Used Once)*
             - Adds unique, often random numbers to password-based authentication processes
             - Prevents attackers from reusing stolen authentication data
@@ -2919,11 +2919,12 @@ security incidents
             - Implementation
             - Post-change review
 - Onboarding and Offboarding Procedures
-    - Onboarding integrates new employees into the organization
-        - ensures productivity and engagement
-            - Includes orientation, training, and integration activities
-        - Offboarding manages the transition when an employee leaves
-            - Tasks include property retrieval, access disabling, and exit interviews
+    - Onboarding integrates new employees through orientation, training, and access provisioning.
+    - Offboarding manages the transition when an employee or contractor leaves.
+        - Coordinate HR, the manager, IT, and physical security on the effective time; disable central and local accounts, revoke active sessions and credentials, check third-party SaaS/cloud access, and recover badges and devices.
+        - Transfer ownership of required files and services; retain audit records and verify access removal. Rotate shared secrets the person knew. See [CIS Control 6.2](https://cas.docs.cisecurity.org/en/latest/source/Controls6/) and [NIST SP 800-53 PS-4](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final).
+        - Use policy-based monitoring and assess specific risk; a departure alone does not make someone a threat actor.
+    - Decommissioning retires a system, device, or service, whereas personnel offboarding manages a person's departure; collecting assigned equipment can be part of both workflows.
     - *Playbooks*
         - Detailed guides for specific tasks or processes
         - They provide step-by-step instructions for consistent and efficient execution
@@ -3221,6 +3222,11 @@ Objectives:
         - More data requires more extensive security measures
         - Leads to higher costs and resource allocation
         - Excessive data complicates retrieval and analysis
+
+### Configuration Management
+
+- Configuration management tracks approved configurations, component versions, owners, and dependencies. A configuration item (CI) may be a server, application, service, network device, or cloud resource. Current records support change impact analysis, incident response, and patch prioritization; see [NIST SP 800-128](https://csrc.nist.gov/pubs/sp/800/128/upd1/final).
+- A configuration management database (CMDB) stores CI records and relationships; a configuration management system (CMS) also includes the tools and processes that maintain and use them. Consistent identifiers help, but neither key-value labels nor a specific relational, document, or warehouse database is required.
 
 ### Change Management
 
@@ -3767,6 +3773,12 @@ Objective 3.4: Explain the importance of resilience and recovery in security arc
         - Use Cases
             - Support different scenarios within organizations
 
+### Availability, Reliability, and Durability
+
+- **Availability** measures whether a service performs its agreed function when needed over a defined period. Four nines is 99.99%, or about 52.6 minutes of downtime per 365-day year if all interruptions count. Planned maintenance may be counted or excluded according to the metric or SLA. See [AWS availability guidance](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/availability.html).
+- **Reliability** means consistently performing the intended function; it is not just uptime excluding planned outages. **Durability** means stored data remains intact. Neither guarantees the other.
+- [S3 Standard](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html) is designed for 11 nines durability and 99.99% availability. [Google Cloud Storage](https://docs.cloud.google.com/storage/docs/availability-durability) targets at least 11 nines annual durability, but its [availability SLA](https://cloud.google.com/storage/sla) differs by class and location; do not assign four nines to every Google Cloud Storage configuration.
+
 ### High Availability
 
 - High Availability Basics
@@ -4138,7 +4150,7 @@ Objectives:
         - Vulnerabilities like vm escape and resource reuse
     - *Serverless Computing*
         - Cloud provider manages server allocation
-        - Developers focus solely on writing code
+        - Teams still secure application code, data, identities, and exposed configuration
     - *Microservices Architecture*
         - Collection of small, autonomous services
         - Each performs a specific business process
@@ -4165,7 +4177,7 @@ Objectives:
 ### On-premise versus the Cloud
 
 - *Cloud Computing*
-    - Delivery of computing services over the internet, including servers, storage, databases, networking, software, analytics, and intelligence
+    - On-demand network access to pooled computing resources; access need not traverse the public Internet
         - Advantages
             - Faster innovation
             - Flexible resources
@@ -4175,7 +4187,7 @@ Objectives:
     - *Third-Party Vendors*
         - Provides specialized services to enhance functionality, security, and efficiency of cloud solutions
     - *Hybrid Solutions*
-        - Combined on-premise, private cloud, and public cloud services, allowing workload flexibility
+        - Distinct cloud infrastructures linked for data or application portability; often a private cloud on premises linked to a public cloud
         - Considerations
             - Sensitive data is protected
             - Regulatory requirements are met
@@ -4191,29 +4203,47 @@ Objectives:
         - Cost
             - Consider both upfront and long-term costs
         - Responsiveness
-            - Speed at which the system can adapt to demand
+            - Request and response latency and the ability to meet performance targets
         - Scalability
             - System's ability to handle increased workloads
         - Ease of Deployment
-            - Cloud services are easier to set up than on-premise solutions
+            - Templates and infrastructure as code can make deployment repeatable; setup effort depends on the design
         - Risk Transference
-            - Some risks are transferred to the provider, but customers are responsible for security
+            - Providers assume specified infrastructure duties, while customers retain data, identity, and configuration duties according to the service
         - Ease of Recovery
-            - Cloud services offer easy data recovery and backup solutions
+            - Provider tools can support backups and recovery, but customers must configure and test them
         - Patch Availability
-            - Providers release patches for vulnerabilities automatically
+            - Patching responsibility depends on the service model; customers may still need to patch operating systems and applications
 - Inability to Patch
     - Compatibility issues or lack of control can hinder patching
 - Power
     - Cloud provider manages infrastructure, including power supply
-        - Reduces customer costs and eliminates power management concerns
+        - Shifts data-center power operations to the provider; customers still plan for client sites and dependent infrastructure
         - Compute
             - Refers to computational resources, including CPUs, memory, and storage
             - Cloud providers offer various compute options to suit different needs
     - Remember
         - Cloud computing offers flexibility, scalability, and cost-effectiveness
-        - On-premise solutions provide control and security but can be expensive and challenging to maintain
+        - On-premises solutions provide direct control, but security depends on their design and operation
         - Hybrid solutions offer flexibility and control but require considerations of security, compliance, interoperability, and cost
+
+### Cloud Service and Deployment Models
+
+| Service model | Provider supplies | Customer normally manages |
+| --- | --- | --- |
+| **IaaS** | Compute, storage, networks, and underlying infrastructure | Guest OS, applications, data, identities, and allowed network controls. |
+| **PaaS** | Managed application platform and infrastructure | Application code, data, identities, and exposed platform settings. |
+| **SaaS** | Finished application and supporting stack | Data, users, permissions, and tenant settings. |
+
+- Service names do not classify every managed database, container, serverless, or security product as PaaS. Check each product's [shared responsibility model](https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility). Customers retain data and identity responsibilities across service models. See [NIST SP 800-145](https://csrc.nist.gov/pubs/sp/800/145/final).
+- **Public cloud** is infrastructure offered for open use, although individual customer workloads may be private. **Private cloud** is dedicated to one organization, on or off premises; a private subnet in a public cloud is not automatically a private cloud. **Community cloud** serves organizations with shared concerns. **Hybrid cloud** links distinct cloud infrastructures for data or application portability. A virtualized data center alone need not be a cloud, and edge computing is a separate pattern. See [NIST's deployment models](https://csrc.nist.gov/pubs/sp/800/145/final).
+- Cloud brokers, MSSPs, CASBs, and auditors provide different services. A SOC 2 report is an attestation, while [CSA STAR](https://cloudsecurityalliance.org/star) offers distinct certification and attestation options. Dedicated interconnects support site-to-cloud connectivity, but do not automatically encrypt data; [AWS Direct Connect](https://docs.aws.amazon.com/directconnect/latest/UserGuide/encryption-in-transit.html), for example, does not encrypt traffic by default. The current product name is [Microsoft Sentinel](https://learn.microsoft.com/en-us/azure/sentinel/overview), formerly Azure Sentinel.
+
+### Architectural Tradeoffs
+
+- Resilience means maintaining essential functions during disruption, possibly in a degraded state, and recovering within mission needs. A business impact analysis helps set those needs; capacity scaling alone does not ensure recovery. See [NIST's definition](https://csrc.nist.gov/glossary/term/resilience).
+- Compare latency and throughput, upfront and ongoing cost, scaling up (more resources on one machine) versus scaling out (more instances), and repeatable deployment through infrastructure as code. Autoscaling and automated patching depend on the platform and configuration.
+- Cloud providers and insurance can transfer some operational or financial risk, while the customer retains responsibilities. On-premises designs must plan for UPS, generators, redundant power, and power quality. See [AWS shared responsibility](https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/shared-responsibility.html).
 
 ### Cloud Security
 
@@ -4275,10 +4305,13 @@ Objectives:
 
 ### Virtualization and Containerization
 
+- A container image carries application code, a runtime, and software libraries, not physical hardware. Containers generally share a host kernel; CPU and memory limits are configured by the runtime or orchestrator. [Kubernetes](https://kubernetes.io/docs/concepts/containers/) explains images and runtimes; [NIST SP 800-190](https://csrc.nist.gov/pubs/sp/800/190/final) covers shared-kernel security risks.
+- Docker Engine builds and runs containers, while Kubernetes orchestrates them using compatible runtimes such as containerd and CRI-O. [Fargate](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html) runs containers on provider-managed hosts with a separate isolation boundary for each task. Image updates, least privilege, resource limits, and network controls still matter.
+
 - *Virtualization*
     - Emulates servers, each with its own OS within a virtual machine
     - *Containerization*
-        - Lightweight alternative, encapsulating apps with their OS environment
+        - Packages applications with user-space dependencies while normally sharing the host kernel
         - Key Benefits
             - Efficiency and Speed
             - Portability
@@ -4301,7 +4334,7 @@ Objectives:
 - *Resource Reuse*
     - Improper clearing of resources may expose sensitive data
     - Containerization Technologies
-        - Docker, Kubernetes, Red Hat OpenShift are popular containerization platforms
+        - Docker builds and runs containers; Kubernetes and Red Hat OpenShift orchestrate containerized workloads
         - Revolutionized application deployment in cloud environments
     - Securing Virtual Machines
         - Regularly update OS, applications, and apply security patches
@@ -4315,56 +4348,17 @@ Objectives:
 
 ### Serverless
 
-- What is Serverless?
-    - Serverless computing doesn't mean no servers; it shifts server management away from developers
-        - Relies on cloud service providers to handle server management, databases, and some application logic
-        - *Functions as a Service (FaaS) Model*
-            - Developers write and deploy individual functions triggered by events
-    - Benefits of Serverless
-        - Reduced operational costs
-            - Pay only for compute time used, no charges when code is idle
-- Automatic scaling
-    - Cloud provider scales resources based on workload, ensuring optimal capacity
-        - Focus on core product
-            - Developers can concentrate on application functionality, not server management
-        - Faster time to market
-            - Reduced infrastructure concerns speed up application development
-    - Challenges and Risks
-        - Vendor Lock-in
-            - Reliance on proprietary interfaces limits flexibility and may increase costs
-        - Immaturity of best practices
-            - Serverless is a relatively new field, and best practices are still evolving
-    - Not a one-size-fits-all solution
-        - Consider the specific needs and requirements of your application; serverless introduces challenges like Vendor Lock-in and service provider dependencies
+- **Serverless** shifts underlying server management to a provider; workload scaling may still require customer configuration. Code still runs on servers. Customers still secure code, data, identities, permissions, and exposed configuration.
+- **Functions as a service (FaaS):** [AWS Lambda](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html) and [Azure Functions](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview) execute event-driven code. For example, an IoT message can be routed to a function that validates it and starts a workflow; integrations are configured explicitly.
+- **Serverless containers:** [AWS Fargate](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html) runs ECS or EKS containers without customer-managed EC2 hosts. Customers choose task CPU/memory, network and IAM settings, and maintain images. Tasks have separate isolation boundaries. See [AWS's Fargate responsibility model](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/security-shared-model.html).
+- **Serverless databases:** [Aurora Serverless v2](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.how-it-works.html) is an autoscaling Aurora configuration for supported database engines; ordinary Aurora is not automatically serverless. Capacity scales within configured bounds, and CloudWatch can show database metrics.
+- Automatic scaling has quotas and limits. Billing varies: [Fargate charges for allocated resources while tasks run](https://aws.amazon.com/fargate/pricing/), and [Azure Functions Flex Consumption can charge for always-ready instances](https://learn.microsoft.com/en-us/azure/azure-functions/flex-consumption-plan). Review cold starts, availability, observability, dependencies, and cost for each workload.
 
 ### Microservices
 
-- *Microservices*
-    - Architectural style for breaking down large applications into small, independent services
-        - Each microservice runs a unique process and communicates through a well-defined, lightweight mechanism
-        - Contrasts with traditional monolithic architecture, where all components are interconnected
-            - Each service in the microservice architecture is self-contained and able to
-
-run independently
-
-- Advantages of Microservices
-    - Scalability
-        - Services can be scaled independently based on demand
-        - Flexibility
-            - Microservices can use different technologies and be managed by different teams
-        - Resilience
-            - Isolation reduces the risk of system-wide failures
-        - Faster Deployments and Updates
-            - Independent deployment and updates allow for agility and reduced deployment risk
-    - Challenges of Microservices
-        - Complexity
-            - Managing multiple services involves inter-service communication, data consistency, and distributed system testing
-        - Data Management
-            - Each microservice can have its own database, leading to data consistency challenges
-        - Network Latency
-            - Increased inter-service communication can result in network latency and slower response times
-        - Security
-            - The distributed nature of microservices increases the attack surface, requiring robust security measures
+- **Microservices** are independently deployable application services organized around defined responsibilities. They communicate through APIs and/or asynchronous messages. Containers package software for execution; microservices describe the software design, so either can exist without the other. See [Azure's architecture guidance](https://learn.microsoft.com/en-us/azure/architecture/microservices/).
+- A service can be developed, deployed, and scaled independently when interfaces and data ownership are designed accordingly. This can help larger teams deliver changes, but it does not guarantee faster development or higher reliability.
+- Tradeoffs include network latency, distributed tracing, service authentication and authorization, failure handling, deployment coordination, and data consistency across services. Avoid splitting an application into services smaller than the operational need warrants.
 
 ### Network Infrastructure
 
@@ -4421,16 +4415,17 @@ run independently
     - Developers and ops teams manage infrastructure through code
         - Code files are versioned, tested, and audited
         - High-level languages like YAML, JSON, or domain-specific languages (e.g., HCL) used
-        - Idempotence ensures identical environments
-            - *Idempotence*
-                - Operation consistently produces the same results
-                - Crucial for consistency and reliability in multiple environments
+        - *Idempotence* means a repeat run should leave the supported resource in the same intended state; it does not guarantee identical environments. Inputs, platform state, and non-idempotent tasks can differ. See [Ansible's playbook guidance](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html).
     - Benefits of IaC
         - Speed and Efficiency
         - Consistency and Standardization
         - Scalability
         - Cost Savings
         - Auditability and Compliance
+    - Practical examples and safeguards
+        - AWS CloudFormation models and deploys stacks from [JSON or YAML templates](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html); Ansible uses YAML playbooks, while Terraform normally uses HCL and can also read JSON.
+        - Reuse modules and variables, review template changes, and deploy through approved CI/CD workflows. Keep secrets out of templates and use least-privilege deployment roles.
+        - Templates describe intended state, not necessarily every live setting: manual edits can cause drift. Detect drift and preview potentially disruptive updates with tools such as CloudFormation change sets. See [AWS best practices](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html).
     - Challenges
         - Learning Curve
             - New skills and mindset required
@@ -4715,8 +4710,8 @@ Objectives:
 - *Firewall*
     - A network security device or software that monitors and controls network traffic based on security rules
     - Protects networks from unauthorized access and potential threats
-- *Screened Subnet (Dual-homed Host)*
-    - Acts as a security barrier between external untrusted networks and internal trusted networks using a protected host with security measures like a packet-filtering firewall
+- *Screened Subnet (DMZ)*
+    - A perimeter network for public-facing services, separated from internal systems by firewall policy. A dual-homed host is a device with two network interfaces, not another name for a screened subnet
     - Types of Firewalls
         - *Packet Filtering Firewalls*
             - Inspect packet headers for IP addresses and port numbers
@@ -4801,6 +4796,13 @@ protection
     - Key Takeaway
         - Firewalls use ACLs to control network traffic, ensuring security by specifying permitted and denied actions
         - Proper ACL configuration and rule order are crucial for effective network protection
+
+### Cloud Network ACLs and Security Groups
+
+- **AWS VPC NACLs:** Stateless, numbered allow/deny rules attached to subnets. Lowest matching number wins; return traffic needs its own rule. The default NACL allows all traffic at rule 100, but a newly created custom NACL denies all until rules are added. The final unmatched rule denies traffic. See [AWS NACL guidance](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html).
+- **AWS security groups:** Stateful allow rules attached to supported resources through network interfaces. They have no numbered first-match order or explicit deny rule; return traffic is allowed automatically. See [AWS security group guidance](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html).
+- **Azure NSGs:** Stateful rules with priorities and both allow and deny actions; they can be attached to a subnet or network interface, not only an entire VNet. See [Azure NSG guidance](https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview).
+- Allow-all rules placed ahead of narrower rules can make the narrower rules ineffective. Restrict administration ports to trusted sources, and review IPv4 and IPv6 rules separately.
 
 ### IDS and IPS
 
@@ -5039,34 +5041,7 @@ fragmentation and other VPN problems
                 - Enables dynamic and efficient routing, improving visibility, performance, and manageability
         - Use Cases
             - Ideal for enterprises with multiple branch offices moving towards cloud-based services
-- IaaS
-    - PaaS
-        - SaaS
-    - *SASE (Secure Access Service Edge)*
-        - A network architecture combining network security and WAN capabilities in a single cloud-based service
-        - Purpose
-            - Addresses challenges of securing and connecting users and data across distributed locations
-        - Key Technology
-            - Utilizes software-defined networking (SDN) for security and networking services from the cloud
-        - Components
-            - Firewalls
-            - VPNs
-            - Zero-trust network access
-            - Cloud Access Security Brokers (CASBs)
-        - Policy and Management
-            - Delivered through a common set of policy and management platforms
-        - Cloud Providers
-            - Major cloud providers offer services aligned with SASE
-            - Examples:
-                - AWS VPC
-                - Azure Virtual WAN
-                - Azure ExpressRoutes
-                - Google Cloud Interconnect
-- Google Cloud VPN
-    - Alignment
-        - These cloud services offer secure, flexible, and global networking capabilities, aligning with SASE principles
-    - Importance
-        - As cyber threats evolve and organizations become more geographically dispersed, understanding and implementing SD-WAN and SASE are crucial for enhanced security and successful migration to cloud-based environments
+- *SASE (Secure Access Service Edge)* combines WAN connectivity with cloud-delivered security functions such as secure web gateway, cloud access security broker (CASB), firewall as a service, and zero-trust network access. SD-WAN can supply the networking component. Individual network products, virtual networks, or private circuits are not complete SASE architectures by themselves. See [CISA's network access guidance](https://www.cisa.gov/sites/default/files/2024-06/joint-guide-modern-approaches-to-secure-network-access-security-508c.pdf).
 
 ### Infrastructure Considerations
 
@@ -5085,10 +5060,8 @@ fragmentation and other VPN problems
         - *Screened Subnets*
             - Act as buffer zones between internal and external networks
             - Hosts public-facing services, protecting core internal networks
-            - Use the term "screened subnet" instead of "DMZ" for modern
+            - "Screened subnet" and "DMZ" are both used for a perimeter segment hosting public-facing services; see [NIST's firewall guidance](https://csrc.nist.gov/pubs/sp/800/41/r1/final)
 - *Attack Surface*
-
-    configurations
 
 - Refers to points where unauthorized access or data extraction can occur
     - A larger attack surface increases the risk of vulnerabilities
@@ -5413,7 +5386,7 @@ fingerprint or facial recognition
             - Increase password complexity and length, limit login attempts, use multifactor authentication, and employ CAPTCHAS
     - *Password Spraying*
         - A form of brute force attack that tries a few common passwords against many usernames or accounts
-        - Effective because it avoids account lockouts and targets weak passwords
+        - Usually targets live login services, spreading attempts across accounts to avoid per-account lockouts while targeting weak passwords
         - Mitigation
             - Use unique passwords and implement multi-factor authentication
     - *Hybrid Attack*
@@ -5551,6 +5524,19 @@ provides a redirect URL and gets an ID and secret
             - Users are granted the minimum access required to perform their job functions
             - Reduces the risk of misuse or accidental damage
             - Regularly review and adjust permissions to prevent authorization creep
+
+### Least Privilege and Separation of Duties
+
+- **Least privilege:** Grant a person or process only the permissions needed for assigned tasks. Need-to-know concerns access to specific information; a job title or clearance does not automatically grant it. Review and remove unneeded access. See [NIST's definition](https://csrc.nist.gov/glossary/term/least_privilege).
+- **Separation of duties (SoD):** Split sensitive work so no single person can prepare and approve the same transaction. Static SoD prevents assignment of conflicting roles; dynamic SoD checks a specific action, such as a two-person approval requiring two different authorized people. See [NIST's SoD definition](https://csrc.nist.gov/glossary/term/separation_of_duty).
+- Temporary elevation can use time-limited PAM access with authentication and logging. Follow the organization's approval policy; a full change ticket is not required for every routine elevation.
+- Rotating duties or requiring an absence can expose irregularities when another person takes over the work. A two-week mandatory vacation is a banking-sector control example, not a universal rule; see [OCC guidance](https://occ.treas.gov/news-issuances/bulletins/2019/bulletin-2019-37.html).
+
+### Monitoring and Reviewing Access Controls
+
+- **Access reviews** compare effective permissions, groups, roles, cloud storage sharing, repository collaborators, and badge privileges with current job duties. Reconcile joiners, movers, and leavers; remove stale access and privilege creep. Record decisions and remediation evidence. See [NIST SP 800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final).
+- **Access monitoring** records what happened: authentication, privilege and policy changes, sensitive data access where supported, and PACS entry events. Send selected logs to a SOC or SIEM and verify log coverage, timestamps, and retention. SOAR can help coordinate response. [Microsoft Sentinel](https://learn.microsoft.com/en-us/azure/sentinel/overview) is the current name of the cloud SIEM/SOAR product formerly called Azure Sentinel.
+- **PIV** (Personal Identity Verification) credentials may be used with physical access control systems. **802.1X with EAP-TLS** provides certificate-based network authentication; it is a separate control. See [NIST SP 800-116](https://csrc.nist.gov/pubs/sp/800/116/r1/final) and [RFC 9190](https://www.rfc-editor.org/rfc/rfc9190.html).
 
 ### Assigning Permissions
 
@@ -5979,8 +5965,7 @@ that trusted website
 
 - *Buffer Overflow Attack*
     - Occurs when a process stores data outside the memory range allocated by the developer
-        - Common initial attack vector in data breaches
-            - 85% of data breaches used buffer overflow as the initial vector
+        - Can cause a crash or enable code execution, depending on the flaw and available mitigations
 - Attackers exploit the excess data written beyond buffer boundaries to manipulate program execution
     - *Buffers*
         - Temporary storage areas used by programs to hold data
@@ -6257,11 +6242,10 @@ protocols like WEP (Wired Equivalent Privacy)
 - *Credential Replay Attack*
     - Specific type of replay attack that Involves capturing a user's login credentials during a session and reusing them for unauthorized access
     - Preventing Replay Attacks
-        - Use session tokens to uniquely identify authentication sessions
-        - Session tokens are generated for each session, making it challenging for attackers to replay sessions
+        - Validate freshness with nonces, sequence numbers, or timestamps as appropriate. A session token alone can be captured and replayed if it is not otherwise protected
         - Implement multi-factor authentication to require additional authentication factors, making replay more difficult
-        - By using multi-factor authentication, attackers lack the necessary additional information to replay login sessions
-        - Implement security protocols like WPA3 (Wi-Fi Protected Access 3) to mitigate replay attack threats
+        - MFA reduces password-only account takeover, but a captured bearer session token may still be replayed unless the session is otherwise protected
+        - Use protocol-specific replay protections; WPA3 alone is not a universal defense for application or credential replay
 
 ### Session Hijacking
 
@@ -6349,7 +6333,7 @@ between those hosts
 
 - *Indicators of Compromise (IoC)*
     - Pieces of forensic data that identify potentially malicious activity on a network or system
-        - Serves as digital evidence that a security breach has occurred
+        - Suggests possible compromise and requires investigation; an indicator alone does not prove a breach
 - IoC includes the following
 - Account Lockouts
     - Occurs when an account is locked due to multiple failed login attempts
@@ -6363,7 +6347,7 @@ between those hosts
     - Suggests a user trying to access malicious content or an attacker attempting to steal data
 - Impossible Travel
     - Detects logins from geographically distant locations within an unreasonably short timeframe
-    - Indicates a likely account compromise as physical travel between these locations is impossible
+    - May indicate account compromise, but VPNs, proxies, and IP geolocation errors can create false positives; see [Microsoft's investigation guidance](https://learn.microsoft.com/en-us/defender-cloud-apps/investigate-anomaly-alerts)
 - Resource Consumption
     - Unusual spikes in resource utilization
         - CPU
@@ -6380,7 +6364,7 @@ attacks
     - Log entries occurring at unusual times
     - Indicates an attacker trying to hide their activities during off-peak hours
 - Missing Logs
-    - Sign that logs have been deleted to hide attacker activities
+    - May result from deletion, disabled logging, retention settings, or collection failures
     - May result in gaps in the log data, making it harder to trace the attacker's actions
 - Published Articles or Documents
     - Attackers publicly disclose their actions, boasting about their skills or causing reputational damage
@@ -6442,12 +6426,19 @@ Objectives:
             - Definition and purpose of secure baselines
             - Establishing a secure starting point for minimizing security risks
 
+### Practical Hardening Techniques
+
+- Disable unused ports, services, and software; patch systems, restrict administrator rights, and monitor changes against approved baselines. Selective ICMP filtering must preserve messages required for operation, such as ICMPv6 Packet Too Big for path MTU discovery. See [RFC 4890](https://www.rfc-editor.org/rfc/rfc4890.html).
+- Use SSHv2 for remote administration; neither Telnet nor SSHv1 is an acceptable secure fallback. Configure access switch ports to avoid unwanted dynamic trunk negotiation, while keeping required trunk links explicitly configured. See [Cisco switch-port guidance](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3750/software/release/12-2_50_se/command/reference/cr/cli3.pdf).
+- Replace default passwords; a default Windows workgroup name is not a password. Supported passwordless options include [Microsoft Entra passkeys, FIDO2 security keys, and Windows Hello for Business](https://learn.microsoft.com/en-us/entra/architecture/auth-passwordless).
+- Use encryption for data at rest and in transit. Protecting data during processing calls for additional controls such as an attested trusted execution environment. A TPM helps protect keys and record boot measurements; EDR detects and responds to endpoint activity, while XDR correlates multiple signal sources. See [Microsoft confidential computing](https://learn.microsoft.com/en-us/azure/confidential-computing/overview) and [TPM guidance](https://learn.microsoft.com/en-us/windows/security/hardware-security/tpm/how-windows-uses-the-tpm).
+
 ### Changing Default Configurations
 
 - Default passwords
     - Preset authentication details
         - Should be immediately changed
-        - Rotate every 90 days
+        - Change immediately if still set to a vendor default or if compromise is suspected; avoid arbitrary periodic password changes. See [NIST SP 800-63B](https://pages.nist.gov/800-63-FAQ/).
         - Rely on password manager
     - Unneeded ports and protocols
         - Close any ports that aren’t needed
@@ -6526,10 +6517,9 @@ workstations in a network
             - More reliable and most often used
     - Hackers can reverse engineer patches to find the underlying vulnerability
     - *Hotfix*
-        - A software patch that solves a security issue and should be applied immediately after being tested in a lab environment
+        - A targeted fix for a specific issue; deployment urgency and test depth depend on exploit activity, exposure, and operational risk
     - *Update*
-        - Provides a system with additional functionality, but it doesn’t usually provide any patching of security related issues
-        - Often introduce new vulnerabilities
+        - May provide new functionality, bug fixes, security fixes, or a combination; review the vendor's release notes and test for compatibility
     - *Service Pack*
         - Includes all the hotfixes and updates since the release of the operating system
     - Effective Patch Management involves

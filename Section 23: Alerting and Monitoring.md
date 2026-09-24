@@ -50,6 +50,13 @@ Important log sources:
 - Email security logs
 - Web server logs
 
+### Access-Control Visibility
+
+- An access review shows who **can** reach a resource; audit logs show who **did** attempt or obtain access. Both are needed to find unauthorized access and privilege creep.
+- Collect relevant authentication failures and successes, account and role changes, privileged actions, sensitive data access where supported, cloud sharing or policy changes, and physical access control system (PACS) events. Include remote access and third-party repositories or storage when they hold important data.
+- Send selected events to a central monitoring service or security operations center (SOC). Check that logging is enabled, timestamps and identities are usable, and retention meets the organization's requirements. Tune alerts for risk rather than assuming every event must generate an alert.
+- A SIEM correlates events; SOAR can coordinate or automate investigation and response. The current name of the cloud SIEM/SOAR product formerly called Azure Sentinel is [Microsoft Sentinel](https://learn.microsoft.com/en-us/azure/sentinel/overview).
+
 ## SIEM
 
 - **SIEM:** Security Information and Event Management.

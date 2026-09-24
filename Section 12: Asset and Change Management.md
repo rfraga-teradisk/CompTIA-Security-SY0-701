@@ -11,10 +11,11 @@
 2. [Asset Inventory](#asset-inventory)
 3. [Asset Classification](#asset-classification)
 4. [Asset Lifecycle](#asset-lifecycle)
-5. [Change Management](#change-management)
-6. [Change Records](#change-records)
-7. [Security Impact of Poor Change Management](#security-impact-of-poor-change-management)
-8. [Key Takeaways](#key-takeaways)
+5. [Configuration Management](#configuration-management)
+6. [Change Management](#change-management)
+7. [Change Records](#change-records)
+8. [Security Impact of Poor Change Management](#security-impact-of-poor-change-management)
+9. [Key Takeaways](#key-takeaways)
 
 ## Asset Management
 
@@ -67,6 +68,16 @@ Asset lifecycle stages:
 4. **Review:** Ownership, access, and configuration are checked.
 5. **Decommissioning:** Asset is removed from active use.
 6. **Disposal:** Asset is securely wiped, destroyed, recycled, or returned.
+
+**Decommissioning** retires an asset or service: remove its access and network exposure, preserve required records or data, update inventory and dependencies, and sanitize storage before reuse or disposal. Personnel **offboarding** handles a person's departure and access; it may include collecting assigned assets, but the processes have different scopes. See [Personnel Offboarding](<Section 17: Identity and Access Management (IAM) Solutions.md#personnel-offboarding>).
+
+## Configuration Management
+
+- **Configuration management (CM):** Maintains an accurate, approved record of system components, settings, versions, and dependencies throughout their lifecycle. It supports secure baselines, change impact analysis, incident response, troubleshooting, and vulnerability and patch management. See [NIST SP 800-128](https://csrc.nist.gov/pubs/sp/800/128/upd1/final).
+- A **configuration item (CI)** is a component or service managed as part of that record, such as a server, application, network device, cloud resource, or software version. Record its owner, status, configuration, and relevant relationships.
+- A **configuration management database (CMDB)** stores CI records and relationships. A **configuration management system (CMS)** includes the data, tools, and processes that maintain and use those records. See [CMS and CMDB definitions in Section 02](<Section 02: Fundamentals of Security.md#documentation-and-version-control>).
+- Keep records current by linking discovery, deployment, change approval, and retirement processes. Consistent identifiers and labels help connect records; a universal key-value schema or a particular database engine is not required.
+- A CMDB helps identify affected systems and dependencies, but accurate records do not guarantee that a penetration test will fail or that every vulnerability is known.
 
 ## Change Management
 

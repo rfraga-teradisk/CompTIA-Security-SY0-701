@@ -39,9 +39,15 @@ Common audit goals:
 - **Vulnerability Assessment:** Finds and prioritizes technical weaknesses.
 - **Penetration Test:** Attempts to exploit weaknesses to prove real-world impact.
 - **Configuration Review:** Compares systems against secure baselines.
-- **Access Review:** Checks whether user permissions are appropriate.
+- **Access Review:** Checks whether accounts and effective permissions still match approved job duties and data-owner decisions.
 - **Tabletop Exercise:** Walks through a scenario to test response decisions.
 - **Compliance Assessment:** Checks alignment with a standard or regulation.
+
+### Reviewing Access
+
+- Compare accounts, group and role memberships, service accounts, and inherited permissions with current responsibilities. Check access changes when people join, move roles, or leave; remove stale or excessive privileges (**privilege creep**).
+- Include sensitive data stores, cloud storage sharing and policies, code repositories, privileged accounts, and physical badge permissions as applicable. Record the reviewer, decision, date, and evidence that changes were completed.
+- Configuration and vulnerability scans or penetration tests may reveal exposed resources, but they do not replace a review of who is authorized to use them. See [NIST SP 800-53, AC-2 and AC-6](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final).
 
 ## Audit Evidence
 

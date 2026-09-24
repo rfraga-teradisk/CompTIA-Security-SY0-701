@@ -250,31 +250,35 @@ A **logic bomb** executes when a specified condition is met. It is distinct from
 - Debugging features or diagnostic information exposed in production
 - Insecure database, network device, or API configuration
 
-Patch management should include testing, deployment planning, and rollback options.
+Disable debugging features in production or secure them appropriately to prevent exposure of sensitive information or privileged functionality.
+
+Patch management should include testing, deployment planning, rollback options, and fallback plans to maintain service if an update fails.
 
 ### SQL Injection (SQLi)
 
 - Untrusted input changes the meaning of a database query.
 - Depending on permissions and the environment, an attacker may read, alter, or delete data or perform administrative actions.
+- Examples include reading data with `SELECT` and modifying it with `INSERT`, `UPDATE`, or `DELETE`. Database capabilities and excessive privileges may also allow database shutdown, file access, or operating system command execution.
 - Parameterized queries and limited database privileges reduce exposure.
 
 ### Cross-Site Scripting (XSS)
 
 - Unsafe handling of untrusted content allows attacker-controlled scripts to execute in a user's browser in the context of a trusted site.
-- Possible effects include accessing browser-readable sensitive information or performing actions as the user.
+- Possible effects include stealing browser-readable cookies, session tokens, or other sensitive information, or performing actions as the user.
 
 Variants:
 
 - **Reflected XSS:** Malicious input is included in an immediate response, often through a crafted link.
-- **Stored XSS:** Malicious content is saved, such as in a comment or database, and served to users later.
-- **DOM-based XSS:** Unsafe client-side code processes attacker-controlled data into an executable browser context.
+- **Stored XSS (Persistent):** Malicious content is saved, such as in a database or file, and served to users later. Blog comments and review or feedback forms are common examples.
+- **DOM-based XSS:** Unsafe client-side code processes attacker-controlled data into an executable browser context. DOM means Document Object Model; this flaw can affect ordinary websites and is not limited to local files, gadgets, or widgets.
 
 Context-appropriate output encoding, safe DOM handling, and sanitization where HTML is permitted help prevent XSS.
 
 ### Cross-Site Request Forgery (CSRF/XSRF)
 
 - Tricks a user's browser into sending an unwanted request to a site where the user is authenticated.
-- Can cause state changes, such as modifying account details, if the application accepts the forged request.
+- Exploits credentials the browser includes automatically, such as session cookies, when the application does not adequately verify that the user intended the action. A malicious page can trigger a request without the user clicking a link.
+- Can cause state changes, such as transferring funds or changing an email address or password, if the application accepts the forged request. The impact depends on the victim's privileges; an administrator's session can expose administrative functions.
 - Anti-CSRF tokens, appropriate cookie settings, and verification for sensitive actions help mitigate the risk.
 
 Quick comparison:
@@ -363,4 +367,3 @@ Deception resources should be isolated and monitored so suspicious interaction p
 - Hardware, virtual machines, cloud services, and mobile devices all need lifecycle management and access controls.
 - Least privilege, secure configuration, patching, monitoring, and awareness work together to reduce exposure.
 
-Study basis: The supplied Skillsoft transcript, *Threat actors and vectors*, presented by Michael J. Shannon. Definitions have been paraphrased and clarified for revision; topics listed but only briefly explained in the transcript include short supporting definitions.
